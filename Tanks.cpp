@@ -2,6 +2,11 @@
 #include <ctime>
 
 using namespace std;
+int Min(int x, int y)
+{
+    if(x<y)return x;
+    else return y;
+}
 class Field
 {
 private:
@@ -17,12 +22,13 @@ public:
     }
     void Create(int x, int y, int a, int b)
     {
-        char Values[] = {'_', '|', 'H'};
+        srand(time(0));
+        char Values[] = {'|', '_', 'H', '_', '_'};
+        int token;
         for(int i=0; i<width;i++)
             for(int j=0; j<length; j++)
             {
-                srand(time(0));
-                int token=rand()%3;
+                token = rand() % 5;
                 F[i][j] = Values[token];
             }
         F[x][y] = 'P';
@@ -30,10 +36,14 @@ public:
     }
     void Printer(int x, int y, int range)
     {
-        for(int i=y-range; i<y+range; i++)
+        for(int i=y-Min(range, y); i<y+Min(range, width-y); i++)
         {
-            for(int j=x-range; j<x+range; j++)cout<<F[i][j];
-            cout<<endl;
+            if(i>=0&&i<=width)
+                for(int j=x-Min(range, x); j<x+Min(range, length - x); j++)
+                {
+                    if (j>=0&&j<=length)cout<<F[i][j];
+                }
+                cout<<endl;
         }
     }
 };
@@ -59,6 +69,8 @@ public:
 int main()
 {
     Tank Player;
-    Player.GetInfo();
+    Field F(25, 25);
+    F.Create(1, 1, 2, 2);
+    F.Printer(12, 12, 25);
     return 0;
 }
