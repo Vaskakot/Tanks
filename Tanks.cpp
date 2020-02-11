@@ -50,14 +50,17 @@ public:
 class Tank
 {
 private:
-    int damage, health, x, y;
+    int damage, health, x, y, direction;
     float armorclass;
 public:
-    Tank()
+    Tank(int sx, int sy, int sd)
     {
         damage = 40;
         health = 400;
         armorclass = 0.10;
+        x = sx;
+        y = sy;
+        direction = sd;
     }
     void GetInfo()
     {
@@ -65,12 +68,32 @@ public:
         cout<<"Your average damage - "<<damage<<endl;
         cout<<"Your armor class(deflect possibility) - "<<armorclass<<endl;
     }
+    int GetX()
+    {
+        return x;
+    }
+    int GetY()
+    {
+        return y;
+    }
+    void Move()
+    {
+        if(direction % 4==0)y++;
+        else if(direction%4==1)x++;
+        else if(direction%4==2)y--;
+        else x--;
+    }
+    void TurnRight()
+    {
+        direction++;
+    }
 };
 int main()
 {
-    Tank Player;
-    Field F(25, 25);
-    F.Create(1, 1, 2, 2);
-    F.Printer(12, 12, 25);
+    Tank Player(1, 1, 1);
+    Tank Enemy(4, 4, 3);
+    Field F(5, 5);
+    F.Create(Player.GetX(), Player.GetY(), Enemy.GetX(), Enemy.GetY());
+    F.Printer(2, 2, 3);
     return 0;
 }
