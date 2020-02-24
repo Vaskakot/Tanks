@@ -7,6 +7,54 @@ int Min(int x, int y)
     if(x<y)return x;
     else return y;
 }
+class Tank
+{
+private:
+    int damage, health, x, y, direction;
+    float armorclass;
+public:
+    Tank(int sx, int sy, int sd)
+    {
+        damage = 40;
+        health = 400;
+        armorclass = 0.10;
+        x = sx;
+        y = sy;
+        direction = sd;
+    }
+    void GetInfo()
+    {
+        cout<<"Your current health - "<<health<<endl;
+        cout<<"Your average damage - "<<damage<<endl;
+        cout<<"Your armor class(deflect possibility) - "<<armorclass<<endl;
+    }
+    int GetX()
+    {
+        return x;
+    }
+    int GetY()
+    {
+        return y;
+    }
+    int GetD()
+    {
+        return direction;
+    }
+    void Move()
+    {
+        if(direction % 4==0)y++;
+        else if(direction%4==1)x++;
+        else if(direction%4==2)y--;
+        else x--;
+    }
+    void TurnRight()
+    {
+        direction++;
+    }
+    ~Tank()
+    {
+    }
+};
 class Field
 {
 private:
@@ -46,46 +94,23 @@ public:
                 cout<<endl;
         }
     }
-};
-class Tank
-{
-private:
-    int damage, health, x, y, direction;
-    float armorclass;
-public:
-    Tank(int sx, int sy, int sd)
+    char Look(Tank T)
     {
-        damage = 40;
-        health = 400;
-        armorclass = 0.10;
-        x = sx;
-        y = sy;
-        direction = sd;
+        if(T.GetD()%4 == 0)return F[T.GetY()+1][T.GetX()];
+        if(T.GetD()%4 == 1)return F[T.GetY()][T.GetX()+1];
+        if(T.GetD()%4 == 2)return F[T.GetY()-1][T.GetX()];
+        if(T.GetD()%4 == 3)return F[T.GetY()][T.GetX()-1];
     }
-    void GetInfo()
+
+    void Movement(Tank T)
     {
-        cout<<"Your current health - "<<health<<endl;
-        cout<<"Your average damage - "<<damage<<endl;
-        cout<<"Your armor class(deflect possibility) - "<<armorclass<<endl;
-    }
-    int GetX()
-    {
-        return x;
-    }
-    int GetY()
-    {
-        return y;
-    }
-    void Move()
-    {
-        if(direction % 4==0)y++;
-        else if(direction%4==1)x++;
-        else if(direction%4==2)y--;
-        else x--;
-    }
-    void TurnRight()
-    {
-        direction++;
+        if(Look(T)!='H')
+        {
+        char token = F[T.GetY()][T.GetX()];
+        F[T.GetY()][T.GetX()] = '_';
+        T.Move();
+        F[T.GetY()][T.GetX()] = token;
+        }
     }
 };
 int main()
@@ -94,6 +119,12 @@ int main()
     Tank Enemy(4, 4, 3);
     Field F(5, 5);
     F.Create(Player.GetX(), Player.GetY(), Enemy.GetX(), Enemy.GetY());
+    F.Printer(2, 2, 3);
+    F.Movement(Player);
+    cout<<endl;
+    F.Printer(2,2, 3);
+    F.Movement(Enemy);
+    cout<<endl;
     F.Printer(2, 2, 3);
     return 0;
 }
